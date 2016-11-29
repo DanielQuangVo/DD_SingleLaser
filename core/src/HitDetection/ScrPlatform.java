@@ -51,7 +51,6 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprPlatform.update();
         }
         sprDino.PositionSet();
-        System.out.println(sprDino.vPos.y);
         HitDetection();
         sprDino.gravity();
         sprDino.update();
@@ -166,7 +165,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.SPACE && sprDino.bGrav == false) {
-            sprDino.vPos.add(0, 4);
+            sprDino.vPos.add(0, 1);
             sprDino.vDir.set((float) sprDino.vDir.x, 25);
             sprDino.vGrav.set(0, (float) -0.4);
             sprDino.bGrav = true;

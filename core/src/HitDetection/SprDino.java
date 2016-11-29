@@ -50,7 +50,6 @@ public class SprDino extends Sprite {
     }
 
     void update() {
-        //System.out.println(vDir.y);
         if (bPlatformCarry && bMove == false) {
             vDir.set((float) -0.5, 0);
         } else if (bPlatformCarry == false && bMove == false) {
