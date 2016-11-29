@@ -50,6 +50,8 @@ public class ScrPlatform implements Screen, InputProcessor {
         for (SprPlatform sprPlatform : arsprPlatform) {
             sprPlatform.update();
         }
+        sprDino.PositionSet();
+        System.out.println(sprDino.vPos.y);
         HitDetection();
         sprDino.gravity();
         sprDino.update();
@@ -93,12 +95,15 @@ public class ScrPlatform implements Screen, InputProcessor {
             System.out.println("dead");
         } else if (nHitType == 2) {
             sprDino.bGoThrough = false;
-            if (sprDino.bMove == false) {
+            if (sprDino.bGrav && sprDino.vDir.x < 0) {
+                sprDino.bJump = false;
+                sprDino.bGrav = false;
+            }
+            if (sprDino.bMove == false && sprDino.bGrav == false) {
                 sprDino.bPlatformCarry = true;
             }
             sprDino.fGround = sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1;
             sprDino.vPos.y = sprDino.fGround;
-            sprDino.bGrav = false;
             System.out.println("land");
         } else if (nHitType == 3) {
             sprDino.bGoThrough = true;
@@ -122,10 +127,9 @@ public class ScrPlatform implements Screen, InputProcessor {
                     return 3;
                 } else if (sprDino.bGrav && sprDino.bGoThrough == false) {
                     return 1;
-                } else if(sprDino.bGoThrough == true){
+                } else if (sprDino.bGoThrough == true) {
                     return 3;
-                } 
-                else if (sprDino.bGrav == false) {
+                } else if (sprDino.bGrav == false) {
                     return 4;
                 }
             }
@@ -162,8 +166,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.SPACE && sprDino.bGrav == false) {
-            sprDino.bMove = true;
-            sprDino.vPos.add(0, 1);
+            sprDino.vPos.add(0, 4);
             sprDino.vDir.set((float) sprDino.vDir.x, 25);
             sprDino.vGrav.set(0, (float) -0.4);
             sprDino.bGrav = true;
@@ -171,7 +174,6 @@ public class ScrPlatform implements Screen, InputProcessor {
         } else if (keycode == Input.Keys.A) {
             sprDino.bMove = true;
             sprDino.vDir.set(-10, (float) sprDino.vDir.y);
-
         } else if (keycode == Input.Keys.D) {
             sprDino.bMove = true;
             sprDino.vDir.set(10, (float) sprDino.vDir.y);

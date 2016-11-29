@@ -10,5 +10,4 @@ public class GamPlatforms  extends Game {
        public void render() {
        super.render();
        }       
-
 }
