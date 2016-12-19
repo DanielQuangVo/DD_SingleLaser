@@ -9,6 +9,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 
@@ -21,13 +23,14 @@ public class ScrPlatform implements Screen, InputProcessor {
     SprPlatform sprPlatform;
     private Array<SprPlatform> arsprPlatform;
     int nHitType, HitPlatform;
+    
 
     public ScrPlatform(Game _game) {
         nHitType = 0;
         HitPlatform = 0;
         game = _game;
         batch = new SpriteBatch();
-        txDino = new Texture("Dinosaur.png");
+        txDino = new Texture("Forward.png");
         txDeadDino = new Texture("dead.png");
         txPlat = new Texture("Platform.png");
         Gdx.input.setInputProcessor((this));
@@ -36,6 +39,8 @@ public class ScrPlatform implements Screen, InputProcessor {
         sprPlatform = new SprPlatform(txPlat);
         arsprPlatform = new Array<SprPlatform>();
         arsprPlatform.add(sprPlatform);
+     
+        
     }
 
     @Override
