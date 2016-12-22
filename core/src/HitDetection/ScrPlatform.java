@@ -9,9 +9,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 
@@ -95,7 +92,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     void HitDetection() {
         nHitType = HitPlatform();
         if (nHitType == 0) {
-            System.out.println("NO HIT");
+//            System.out.println("NO HIT");
             sprDino.bPlatformCarry = false;
             sprDino.fGround = 0;
             sprDino.bGrav = true;
@@ -105,7 +102,7 @@ public class ScrPlatform implements Screen, InputProcessor {
             }
         } else if (nHitType == 1) {
             sprDino.bGoThrough = false;
-            System.out.println("dead");
+//            System.out.println("dead");
         } else if (nHitType == 2) {
             sprDino.bGoThrough = false;
             if (sprDino.bGrav && sprDino.vDir.x < 0) {
@@ -117,13 +114,13 @@ public class ScrPlatform implements Screen, InputProcessor {
             }
             sprDino.fGround = sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1;
             sprDino.vPos.y = sprDino.fGround;
-            System.out.println("land");
+//            System.out.println("land");
         } else if (nHitType == 3) {
             sprDino.bGoThrough = true;
-            System.out.println("pass through");
+//            System.out.println("pass through");
         } else if (nHitType == 4) {
             sprDino.bGoThrough = false;
-            System.out.println("I'm on the ground and the block hit me");
+//            System.out.println("I'm on the ground and the block hit me");
         }
     }
 

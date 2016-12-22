@@ -1,15 +1,11 @@
 package HitDetection;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class SprHitPoint extends Sprite {
-    String sFile;
     Texture txHitPoint;
-    Image imgHitPoint;
     private Sprite _sprHitPoint;
     Vector2 vPos, vPrevPos;
 
