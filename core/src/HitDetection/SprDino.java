@@ -38,11 +38,13 @@ public class SprDino extends Sprite {
         vGrav = new Vector2(0, 0);
         vPrevPos = new Vector2(0, 0);
         fGround = 0;
+        vHitPoint = new Vector2(0,0);
         bGrav = false;
         bGoThrough = false;
         bPlatformCarry = false;
         bMove = false;
         arsprHitPoint = new Array<SprHitPoint>();
+        vHitPoints = new Vector2[6];
         for (int i = 0; i < 6; i++) {
             if(i == 0){
                 vHitPoints[i] = new Vector2(50,0);

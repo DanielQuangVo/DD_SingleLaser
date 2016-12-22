@@ -25,9 +25,12 @@ public class ScrPlatform implements Screen, InputProcessor {
     SprPlatform sprPlatform;
     private Array<SprPlatform> arsprPlatform;
     int nHitType, HitPlatform;
-    
 
     public ScrPlatform(Game _game) {
+        txHitPoint = new Texture[6];
+        for (int i = 0; i < 6; i++) {
+            txHitPoint[i] = new Texture("target"+i+".jpg");
+        }
         nHitType = 0;
         HitPlatform = 0;
         game = _game;
@@ -41,11 +44,9 @@ public class ScrPlatform implements Screen, InputProcessor {
         sprPlatform = new SprPlatform(txPlat);
         arsprPlatform = new Array<SprPlatform>();
         arsprPlatform.add(sprPlatform);
-        for(int i = 0; i < 6; i++){
-            txHitPoint[i] = new Texture("hitpoint"+i+".jpg");
-        }
-     
-        
+
+
+
     }
 
     @Override
