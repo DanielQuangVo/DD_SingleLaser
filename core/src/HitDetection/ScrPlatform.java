@@ -131,6 +131,7 @@ public class ScrPlatform implements Screen, InputProcessor {
         Iterator<SprPlatform> iter = arsprPlatform.iterator();
         while (iter.hasNext()) {
             SprPlatform sprPlatform = iter.next();
+            sprDino.HitDetection(sprPlatform);
             if (sprDino.getSprite().getBoundingRectangle().overlaps(sprPlatform.getSprite().getBoundingRectangle())) {
                 if (sprDino.vPrevPos.y >= (sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight())) {
                     return 2;
