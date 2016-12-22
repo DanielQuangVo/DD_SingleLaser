@@ -13,7 +13,9 @@ public class SprPlatform extends Sprite {
 
     SprPlatform(Texture _txPlat) {
         txPlat = _txPlat;
+        
         sprPlat = new Sprite(txPlat);
+        sprPlat.setSize(50,75);
         vPos = new Vector2(500,200);
         vPrevPos = new Vector2(500,50);
         vDir = new Vector2((float) -0.5,0);

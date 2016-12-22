@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 
@@ -19,6 +20,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     Game game;
     SpriteBatch batch;
     Texture txDeadDino, txDino, txPlat;
+    Texture[] txHitPoint;
     SprDino sprDino;
     SprPlatform sprPlatform;
     private Array<SprPlatform> arsprPlatform;
@@ -35,10 +37,13 @@ public class ScrPlatform implements Screen, InputProcessor {
         txPlat = new Texture("Platform.png");
         Gdx.input.setInputProcessor((this));
         Gdx.graphics.setDisplayMode(600, 400, false);
-        sprDino = new SprDino(txDino, txDeadDino);
+        sprDino = new SprDino(txDino, txDeadDino, txHitPoint);
         sprPlatform = new SprPlatform(txPlat);
         arsprPlatform = new Array<SprPlatform>();
         arsprPlatform.add(sprPlatform);
+        for(int i = 0; i < 6; i++){
+            txHitPoint[i] = new Texture("hitpoint"+i+".jpg");
+        }
      
         
     }
@@ -63,6 +68,9 @@ public class ScrPlatform implements Screen, InputProcessor {
         batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
         for (SprPlatform sprPlatform : arsprPlatform) {
             batch.draw(sprPlatform.getSprite(), sprPlatform.getX(), sprPlatform.getY());
+        }
+        for (SprHitPoint _sprHitPoint : sprDino.arsprHitPoint) {
+            batch.draw(_sprHitPoint.getSprite(), _sprHitPoint.getX(), _sprHitPoint.getY());
         }
         SpawnPlatform();
         batch.end();

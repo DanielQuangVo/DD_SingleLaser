@@ -7,25 +7,29 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 public class SprDino extends Sprite {
 
     Texture txDino, txDeadDino;
-    Vector2 vPos, vDir, vGrav, vPrevPos;
+    Texture[] txHitPoint;
+    Vector2 vPos, vDir, vGrav, vPrevPos, vHitPoint;
+    Vector2[] vHitPoints;
     private Sprite sprDino;
     boolean bJump, bGrav, bGoThrough, bPlatformCarry, bMove;
     float fGround;
-    ShapeRenderer shapeRenderer;
-    Rectangle2D.Double HitPoint;
-    Array<Rectangle2D.Double> arHitPoints;
+    SprHitPoint sprHitPoint;
+    Array<SprHitPoint> arsprHitPoint;
 
-    SprDino(Texture _txDino, Texture _txDeadDino) {
-        shapeRenderer = new ShapeRenderer();
+    SprDino(Texture _txDino, Texture _txDeadDino, Texture[] _txHitPoint) {
+        txHitPoint = _txHitPoint;
         txDino = _txDino;
         txDeadDino = _txDeadDino;
         sprDino = new Sprite(txDino);
@@ -38,9 +42,30 @@ public class SprDino extends Sprite {
         bGoThrough = false;
         bPlatformCarry = false;
         bMove = false;
-        HitPoint = new Rectangle2D.Double(vPos.x + vPos.x * 0.2577319588, vPos.y, sprDino.getWidth() * 0.3865979381, sprDino.getHeight() * 0.1602564103);
-        arHitPoints = new Array<Rectangle2D.Double>();
-        arHitPoints.add(HitPoint);
+        arsprHitPoint = new Array<SprHitPoint>();
+        for (int i = 0; i < 6; i++) {
+            if(i == 0){
+                vHitPoints[i] = new Vector2(50,0);
+            }
+            if(i == 1){
+                vHitPoints[i] = new Vector2(66,33);
+            }
+            if(i == 2){
+                vHitPoints[i] = new Vector2(0,35);
+            }
+            if(i == 3){
+                vHitPoints[i] = new Vector2(140,75);
+            }
+            if(i == 4){
+                vHitPoints[i] = new Vector2(170,110);
+            }
+            if(i == 5){
+                vHitPoints[i] = new Vector2(115,135);
+            }
+            vHitPoint.set(vHitPoints[i].x+vPos.x,vHitPoints[i].y+vPos.y);
+            sprHitPoint = new SprHitPoint(txHitPoint[i],vHitPoint);
+            arsprHitPoint.add(sprHitPoint);
+        }
     }
 
     void gravity() {
@@ -73,20 +98,13 @@ public class SprDino extends Sprite {
         vDir.add(vGrav);
         vPos.add(vDir);
         PositionSet();
-        HitPoints();
-    }
-
-    void HitPoints() {
-        Gdx.gl.glEnable(GL20.GL_ARRAY_BUFFER_BINDING);
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (Rectangle2D.Double HitPoint : arHitPoints) {
-            HitPoint = new Rectangle2D.Double(vPos.x + (vPos.x * 0.2577319588), vPos.y, sprDino.getWidth() * 0.3865979381, sprDino.getHeight() * 0.1602564103);
-            shapeRenderer.rect((float) HitPoint.x, (float) HitPoint.y, (float) HitPoint.width, (float) HitPoint.height);
+          Iterator<SprHitPoint> iter = arsprHitPoint.iterator();
+        for(int x = 0; iter.hasNext(); x++) {
+            SprHitPoint sprHitPoint = iter.next();
+            vHitPoint.set(vPos.x+vHitPoints[x].x,vPos.y+vHitPoints[x].y);
+            sprHitPoint.update(vHitPoint);
         }
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+        
     }
 
     void PositionSet() {
