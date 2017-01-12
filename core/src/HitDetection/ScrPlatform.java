@@ -26,7 +26,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     public ScrPlatform(Game _game) {
         txHitPoint = new Texture[6];
         for (int i = 0; i < 6; i++) {
-            txHitPoint[i] = new Texture("target"+i+".jpg");
+            txHitPoint[i] = new Texture("target" + i + ".jpg");
         }
         nHitType = 0;
         HitPlatform = 0;
@@ -90,9 +90,9 @@ public class ScrPlatform implements Screen, InputProcessor {
     }
 
     void HitDetection() {
-        nHitType = HitPlatform();
+        nHitType = nHitPlatform();
         if (nHitType == 0) {
-//            System.out.println("NO HIT");
+            //System.out.println("NO HIT");
             sprDino.bPlatformCarry = false;
             sprDino.fGround = 0;
             sprDino.bGrav = true;
@@ -102,7 +102,7 @@ public class ScrPlatform implements Screen, InputProcessor {
             }
         } else if (nHitType == 1) {
             sprDino.bGoThrough = false;
-//            System.out.println("dead");
+            //System.out.println("dead");
         } else if (nHitType == 2) {
             sprDino.bGoThrough = false;
             if (sprDino.bGrav && sprDino.vDir.x < 0) {
@@ -114,38 +114,37 @@ public class ScrPlatform implements Screen, InputProcessor {
             }
             sprDino.fGround = sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1;
             sprDino.vPos.y = sprDino.fGround;
-//            System.out.println("land");
+            //System.out.println("land");
         } else if (nHitType == 3) {
             sprDino.bGoThrough = true;
-//            System.out.println("pass through");
+            //System.out.println("pass through");
         } else if (nHitType == 4) {
             sprDino.bGoThrough = false;
-//            System.out.println("I'm on the ground and the block hit me");
+            //System.out.println("I'm on the ground and the block hit me");
         }
     }
 
-    int HitPlatform() {
+    public int nHitPlatform() {
         Iterator<SprPlatform> iter = arsprPlatform.iterator();
         while (iter.hasNext()) {
             SprPlatform sprPlatform = iter.next();
-            sprDino.HitDetection(sprPlatform);
             if (sprDino.getSprite().getBoundingRectangle().overlaps(sprPlatform.getSprite().getBoundingRectangle())) {
                 if (sprDino.vPrevPos.y >= (sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight())) {
-                    return 2;
+                    return sprDino.nHitDetection(sprPlatform, 2);
                 } else if (sprDino.vPos.y == sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1) {
-                    return 2;
+                    return sprDino.nHitDetection(sprPlatform, 2);
                 } else if (sprDino.vPrevPos.y + sprDino.getSprite().getHeight() <= sprPlatform.vPrevPos.y) {
-                    return 3;
+                    return sprDino.nHitDetection(sprPlatform, 3);
                 } else if (sprDino.bGrav && sprDino.bGoThrough == false) {
-                    return 1;
+                    return sprDino.nHitDetection(sprPlatform, 1);
                 } else if (sprDino.bGoThrough == true) {
-                    return 3;
+                    return sprDino.nHitDetection(sprPlatform, 3);
                 } else if (sprDino.bGrav == false) {
-                    return 4;
+                    return sprDino.nHitDetection(sprPlatform, 4);
                 }
             }
         }
-        return 0;
+        return sprDino.nHitDetection(sprPlatform, 0);
     }
 
     @Override

@@ -11,10 +11,10 @@ public class SprDino extends Sprite {
     Texture txDino, txDeadDino;
     Texture[] txHitPoint;
     Vector2 vPos, vDir, vGrav, vPrevPos, vHitPoint;
-    Vector2[] vHitPoints;
     private Sprite sprDino;
     boolean bJump, bGrav, bGoThrough, bPlatformCarry, bMove;
     float fGround;
+    int[] nHitType;
     SprHitPoint sprHitPoint;
     Array<SprHitPoint> arsprHitPoint;
 
@@ -34,29 +34,27 @@ public class SprDino extends Sprite {
         bPlatformCarry = false;
         bMove = false;
         arsprHitPoint = new Array<SprHitPoint>();
-        vHitPoints = new Vector2[6];
+        nHitType = new int[6];
+        vHitPoint.set(50, 0);
+        sprHitPoint = new SprHitPoint(txHitPoint[0], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
+        vHitPoint.set(66, 33);
+        sprHitPoint = new SprHitPoint(txHitPoint[1], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
+        vHitPoint.set(0, 35);
+        sprHitPoint = new SprHitPoint(txHitPoint[2], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
+        vHitPoint.set(140, 75);
+        sprHitPoint = new SprHitPoint(txHitPoint[3], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
+        vHitPoint.set(170, 110);
+        sprHitPoint = new SprHitPoint(txHitPoint[4], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
+        vHitPoint.set(115, 135);
+        sprHitPoint = new SprHitPoint(txHitPoint[5], vHitPoint);
+        arsprHitPoint.add(sprHitPoint);
         for (int i = 0; i < 6; i++) {
-            if (i == 0) {
-                vHitPoints[i] = new Vector2(50, 0);
-            }
-            if (i == 1) {
-                vHitPoints[i] = new Vector2(66, 33);
-            }
-            if (i == 2) {
-                vHitPoints[i] = new Vector2(0, 35);
-            }
-            if (i == 3) {
-                vHitPoints[i] = new Vector2(140, 75);
-            }
-            if (i == 4) {
-                vHitPoints[i] = new Vector2(170, 110);
-            }
-            if (i == 5) {
-                vHitPoints[i] = new Vector2(115, 135);
-            }
-            vHitPoint.set(vHitPoints[i].x + vPos.x, vHitPoints[i].y + vPos.y);
-            sprHitPoint = new SprHitPoint(txHitPoint[i], vHitPoint);
-            arsprHitPoint.add(sprHitPoint);
+            nHitType[i] = 0;
         }
     }
 
@@ -93,8 +91,7 @@ public class SprDino extends Sprite {
         Iterator<SprHitPoint> iter = arsprHitPoint.iterator();
         for (int x = 0; iter.hasNext(); x++) {
             SprHitPoint sprHitPoint = iter.next();
-            vHitPoint.set(vPos.x + vHitPoints[x].x, vPos.y + vHitPoints[x].y);
-            sprHitPoint.update(vHitPoint);
+            sprHitPoint.update(vPos);
         }
 
     }
@@ -107,11 +104,47 @@ public class SprDino extends Sprite {
         sprDino.setTexture(_txDinoState);
     }
 
-    void HitDetection(SprPlatform sprPlatform) {
+    int nHitDetection(SprPlatform sprPlatform, int nGeneralHitType) {
+        HitDetectionPoints(sprPlatform);
+        if (nGeneralHitType == 0) {
+            return 0;
+        } else if (nGeneralHitType == 1 ) {
+            return 1;
+        } else if (nGeneralHitType == 2) {
+            if (nHitType[0] == 2) {
+                return 2;
+            }
+        } else if (nGeneralHitType == 3) {
+            if (nHitType[4] == 3 && nHitType[0] == 0 && nHitType[1] == 0 && nHitType[2] == 0 && nHitType[3] == 0 && nHitType[5] == 0) {
+                System.out.println("decapitation");
+                return 3;
+            }
+            return 3;
+        } else if (nGeneralHitType == 4) {
+            return 4;
+        }
+        return 0;
+    }
+
+    void HitDetectionPoints(SprPlatform sprPlatform) {
         Iterator<SprHitPoint> iter = arsprHitPoint.iterator();
         for (int x = 0; iter.hasNext(); x++) {
             SprHitPoint sprHitPoint = iter.next();
             if (sprHitPoint.getSprite().getBoundingRectangle().overlaps(sprPlatform.getSprite().getBoundingRectangle())) {
+
+                if (sprHitPoint.vPrevPos.y >= (sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight())) {
+                    nHitType[x] = 2;
+                } else if (sprHitPoint.vPos.y == sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1) {
+                    nHitType[x] = 2;
+                } else if (sprHitPoint.vPrevPos.y + sprHitPoint.getSprite().getHeight() <= sprPlatform.vPrevPos.y) {
+                    nHitType[x] = 3;
+                } else if (bGrav && bGoThrough == false) {
+                    nHitType[x] = 1;
+                } else if (bGoThrough == true) {
+                    nHitType[x] = 3;
+                } else if (bGrav == false) {
+                    nHitType[x] = 4;
+                }
                 if (x == 0) {
                     System.out.println("feet");
                 }
@@ -125,11 +158,15 @@ public class SprDino extends Sprite {
                     System.out.println("chin");
                 }
                 if (x == 4) {
-                      System.out.println("nose");
+                    System.out.println("nose");
                 }
                 if (x == 5) {
-                      System.out.println("forehead");
+                    System.out.println("forehead");
                 }
+//                System.out.println(nHitType[x]);
+//                System.out.println(sprHitPoint.vPos.x + " " + sprHitPoint.vPos.y);
+            } else {
+                nHitType[x] = 0;
             }
         }
     }
