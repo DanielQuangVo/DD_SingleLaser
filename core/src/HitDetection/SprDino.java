@@ -8,7 +8,7 @@ import java.util.Iterator;
 
 public class SprDino extends Sprite {
 
-    Texture txDino, txDeadDino;
+    Texture txDino;
     Texture[] txHitPoint;
     Vector2 vPos, vDir, vGrav, vPrevPos, vHitPoint;
     private Sprite sprDino;
@@ -18,10 +18,9 @@ public class SprDino extends Sprite {
     SprHitPoint sprHitPoint;
     Array<SprHitPoint> arsprHitPoint;
 
-    SprDino(Texture _txDino, Texture _txDeadDino, Texture[] _txHitPoint) {
+    SprDino(Texture _txDino, Texture[] _txHitPoint) {
         txHitPoint = _txHitPoint;
-        txDino = _txDino;
-        txDeadDino = _txDeadDino;
+        txDino = _txDino;        
         sprDino = new Sprite(txDino);
         vPos = new Vector2(0, 0);
         vDir = new Vector2(0, 0);
@@ -79,7 +78,7 @@ public class SprDino extends Sprite {
         }
     }
 
-    void update() {
+    void update(int nAni) {
         if (bPlatformCarry && bMove == false) {
             vDir.set((float) -0.5, 0);
         } else if (bPlatformCarry == false && bMove == false) {
@@ -91,7 +90,7 @@ public class SprDino extends Sprite {
         Iterator<SprHitPoint> iter = arsprHitPoint.iterator();
         for (int x = 0; iter.hasNext(); x++) {
             SprHitPoint sprHitPoint = iter.next();
-            sprHitPoint.update(vPos);
+            sprHitPoint.update(vPos, nAni);
         }
 
     }
@@ -108,16 +107,18 @@ public class SprDino extends Sprite {
         HitDetectionPoints(sprPlatform);
         if (nGeneralHitType == 0) {
             return 0;
-        } else if (nGeneralHitType == 1 ) {
+        } else if (nGeneralHitType == 1) {
             return 1;
         } else if (nGeneralHitType == 2) {
             if (nHitType[0] == 2) {
                 return 2;
             }
         } else if (nGeneralHitType == 3) {
-            if (nHitType[4] == 3 && nHitType[0] == 0 && nHitType[1] == 0 && nHitType[2] == 0 && nHitType[3] == 0 && nHitType[5] == 0) {
-                System.out.println("decapitation");
-                return 3;
+            if (nHitType[4] == 3 && nHitType[0] == 0 && nHitType[1] == 0 && nHitType[2] == 0 && nHitType[3] == 0) {
+                if (nHitType[5] == 0 || nHitType[5] == 1 || nHitType[5] == 3) {
+                    System.out.println("decapitation");
+                    return 5;
+                }
             }
             return 3;
         } else if (nGeneralHitType == 4) {

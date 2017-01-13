@@ -16,12 +16,12 @@ public class ScrPlatform implements Screen, InputProcessor {
 
     Game game;
     SpriteBatch batch;
-    Texture txDeadDino, txDino, txPlat;
+    Texture txDeadDino, txDino, txPlat, txSheet, txDinFor1, txDinoFor2,txBack1, txBack2, txJumpRight,txJumpLeft, txDead;
     Texture[] txHitPoint;
     SprDino sprDino;
     SprPlatform sprPlatform;
     private Array<SprPlatform> arsprPlatform;
-    int nHitType, HitPlatform;
+    int nHitType, HitPlatform, nAni;
 
     public ScrPlatform(Game _game) {
         txHitPoint = new Texture[6];
@@ -30,20 +30,25 @@ public class ScrPlatform implements Screen, InputProcessor {
         }
         nHitType = 0;
         HitPlatform = 0;
+        nAni = 0;
         game = _game;
         batch = new SpriteBatch();
         txDino = new Texture("Forward.png");
         txDeadDino = new Texture("dead.png");
         txPlat = new Texture("Platform.png");
+        txDinFor1 = (new Texture(Gdx.files.internal("0.png")));
+        txDinoFor2 = (new Texture(Gdx.files.internal("1.png")));
+        txBack1 = (new Texture(Gdx.files.internal("3.png")));
+        txBack2 = (new Texture(Gdx.files.internal("4.png")));
+        txJumpRight = (new Texture(Gdx.files.internal("2.png")));
+        txJumpLeft = (new Texture(Gdx.files.internal("5.png")));
+        txDead = (new Texture(Gdx.files.internal("6.png")));
         Gdx.input.setInputProcessor((this));
         Gdx.graphics.setDisplayMode(600, 400, false);
-        sprDino = new SprDino(txDino, txDeadDino, txHitPoint);
+        sprDino = new SprDino(txDino, txHitPoint);
         sprPlatform = new SprPlatform(txPlat);
         arsprPlatform = new Array<SprPlatform>();
         arsprPlatform.add(sprPlatform);
-
-
-
     }
 
     @Override
@@ -61,7 +66,20 @@ public class ScrPlatform implements Screen, InputProcessor {
         sprDino.PositionSet();
         HitDetection();
         sprDino.gravity();
-        sprDino.update();
+        if (nAni == 0) {
+            sprDino.Animate(txDinFor1);
+        } else if(nAni == 1){
+            sprDino.Animate(txDinoFor2);
+        }else if(nAni == 2){
+            sprDino.Animate(txBack2);
+        }else if(nAni == 5){
+            sprDino.Animate(txBack1);
+        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.D)){
+            sprDino.Animate(txJumpRight);
+        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.A)){
+            sprDino.Animate(txJumpLeft);
+        }
+        sprDino.update(nAni);
         batch.begin();
         batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
         for (SprPlatform sprPlatform : arsprPlatform) {
@@ -92,6 +110,7 @@ public class ScrPlatform implements Screen, InputProcessor {
     void HitDetection() {
         nHitType = nHitPlatform();
         if (nHitType == 0) {
+            nAni = 0;
             //System.out.println("NO HIT");
             sprDino.bPlatformCarry = false;
             sprDino.fGround = 0;
@@ -115,12 +134,15 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprDino.fGround = sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1;
             sprDino.vPos.y = sprDino.fGround;
             //System.out.println("land");
-        } else if (nHitType == 3) {
+        } else if (nHitType == 3 ) {
             sprDino.bGoThrough = true;
             //System.out.println("pass through");
         } else if (nHitType == 4) {
             sprDino.bGoThrough = false;
             //System.out.println("I'm on the ground and the block hit me");
+        } else if(nHitType == 5){
+            sprDino.bGoThrough = true;
+            nAni = 1;
         }
     }
 
@@ -181,12 +203,15 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprDino.vGrav.set(0, (float) -0.4);
             sprDino.bGrav = true;
             sprDino.bJump = true;
+            nAni = 3;
         } else if (keycode == Input.Keys.A) {
             sprDino.bMove = true;
             sprDino.vDir.set(-10, (float) sprDino.vDir.y);
+            nAni = 2;
         } else if (keycode == Input.Keys.D) {
             sprDino.bMove = true;
             sprDino.vDir.set(10, (float) sprDino.vDir.y);
+            nAni = 1;
         } else if (keycode == Input.Keys.E) {
             System.exit(3);
         }
@@ -198,11 +223,12 @@ public class ScrPlatform implements Screen, InputProcessor {
         if (keycode == Input.Keys.A) {
             sprDino.bMove = false;
             sprDino.vDir.set(0, (float) sprDino.vDir.y);
+            nAni = 5;
 
         } else if (keycode == Input.Keys.D) {
             sprDino.bMove = false;
             sprDino.vDir.set(0, (float) sprDino.vDir.y);
-
+            nAni = 0;
         }
         return false;
     }
