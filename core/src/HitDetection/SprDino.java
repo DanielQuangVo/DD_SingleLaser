@@ -90,7 +90,7 @@ public class SprDino extends Sprite {
         Iterator<SprHitPoint> iter = arsprHitPoint.iterator();
         for (int x = 0; iter.hasNext(); x++) {
             SprHitPoint sprHitPoint = iter.next();
-            sprHitPoint.update(vPos, nAni);
+            sprHitPoint.update(vPos, nAni, sprDino);
         }
 
     }

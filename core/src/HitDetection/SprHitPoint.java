@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class SprHitPoint extends Sprite {
 
     Texture txHitPoint;
-    private Sprite _sprHitPoint;
+    private Sprite sprHitPoint;
     Vector2 vPos, vPrevPos, vOrigPart, vPart;
 
     SprHitPoint(Texture _txHitPoint, Vector2 _vPart) {
@@ -16,26 +16,26 @@ public class SprHitPoint extends Sprite {
         vPos.set(vOrigPart);
         vPart = new Vector2(vOrigPart.x, vOrigPart.y);
         txHitPoint = _txHitPoint;
-        _sprHitPoint = new Sprite(txHitPoint);
+        sprHitPoint = new Sprite(txHitPoint);
         vPrevPos = new Vector2(0, 0);
     }
 
-    void update(Vector2 _vDinoPos, int nAni) {
-        if (nAni == 0) {
+    void update(Vector2 _vDinoPos, int nAni, Sprite _sprDino) {
+        if (nAni == 0||nAni == 1) {
             vPart.set(vOrigPart);
-        } else if (nAni == 1) {
-        } else if (nAni == 2) {
-        } else if (nAni == 3) {
-        } else if (nAni == 4) {
-        } else if (nAni == 5) {
-        }
+        } else if (nAni == 2 || nAni == 5) {
+            if(vPart.x < (_sprDino.getWidth()/2)){
+                 vPart.set((_sprDino.getWidth()/2)+((_sprDino.getWidth()/2)- vOrigPart.x),vOrigPart.y);
+            }
+            vPart.set(((_sprDino.getWidth()/2)-(vOrigPart.x-(_sprDino.getWidth()/2)))-sprHitPoint.getWidth(),vOrigPart.y);
+        } 
         vPrevPos.set(vPos);
         vPos.set(_vDinoPos.x + vPart.x, _vDinoPos.y + vPart.y);
-        _sprHitPoint.setPosition(vPos.x, vPos.y);
+        sprHitPoint.setPosition(vPos.x, vPos.y);
     }
 
     public Sprite getSprite() {
-        return _sprHitPoint;
+        return sprHitPoint;
     }
 
     //@Override

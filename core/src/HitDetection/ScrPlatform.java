@@ -16,7 +16,7 @@ public class ScrPlatform implements Screen, InputProcessor {
 
     Game game;
     SpriteBatch batch;
-    Texture txDeadDino, txDino, txPlat, txSheet, txDinFor1, txDinoFor2,txBack1, txBack2, txJumpRight,txJumpLeft, txDead;
+    Texture txDeadDino, txDino, txPlat, txSheet, txDinFor1, txDinoFor2, txBack1, txBack2, txJumpRight, txJumpLeft, txDead;
     Texture[] txHitPoint;
     SprDino sprDino;
     SprPlatform sprPlatform;
@@ -68,23 +68,25 @@ public class ScrPlatform implements Screen, InputProcessor {
         sprDino.gravity();
         if (nAni == 0) {
             sprDino.Animate(txDinFor1);
-        } else if(nAni == 1){
+        } else if (nAni == 1) {
             sprDino.Animate(txDinoFor2);
-        }else if(nAni == 2){
+        } else if (nAni == 2) {
             sprDino.Animate(txBack2);
-        }else if(nAni == 5){
+        } else if (nAni == 5) {
             sprDino.Animate(txBack1);
-        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.D)){
+        } else if (nAni == 3) {
+            sprDino.Animate(txDead);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.D)) {
             sprDino.Animate(txJumpRight);
-        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.A)){
+        } else if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.A)) {
             sprDino.Animate(txJumpLeft);
         }
         sprDino.update(nAni);
         batch.begin();
-        batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
         for (SprPlatform sprPlatform : arsprPlatform) {
             batch.draw(sprPlatform.getSprite(), sprPlatform.getX(), sprPlatform.getY());
         }
+        batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
         for (SprHitPoint _sprHitPoint : sprDino.arsprHitPoint) {
             batch.draw(_sprHitPoint.getSprite(), _sprHitPoint.getX(), _sprHitPoint.getY());
         }
@@ -110,7 +112,6 @@ public class ScrPlatform implements Screen, InputProcessor {
     void HitDetection() {
         nHitType = nHitPlatform();
         if (nHitType == 0) {
-            nAni = 0;
             //System.out.println("NO HIT");
             sprDino.bPlatformCarry = false;
             sprDino.fGround = 0;
@@ -134,15 +135,15 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprDino.fGround = sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1;
             sprDino.vPos.y = sprDino.fGround;
             //System.out.println("land");
-        } else if (nHitType == 3 ) {
+        } else if (nHitType == 3) {
             sprDino.bGoThrough = true;
             //System.out.println("pass through");
         } else if (nHitType == 4) {
             sprDino.bGoThrough = false;
             //System.out.println("I'm on the ground and the block hit me");
-        } else if(nHitType == 5){
+        } else if (nHitType == 5) {
             sprDino.bGoThrough = true;
-            nAni = 1;
+            nAni = 3;
         }
     }
 
