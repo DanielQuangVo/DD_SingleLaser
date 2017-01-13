@@ -74,7 +74,7 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprDino.Animate(txBack2);
         } else if (nAni == 5) {
             sprDino.Animate(txBack1);
-        } else if (nAni == 3) {
+        } else if (nAni == 6) {
             sprDino.Animate(txDead);
         } else if (Gdx.input.isKeyPressed(Input.Keys.SPACE) && Gdx.input.isKeyPressed(Input.Keys.D)) {
             sprDino.Animate(txJumpRight);
@@ -143,7 +143,7 @@ public class ScrPlatform implements Screen, InputProcessor {
             //System.out.println("I'm on the ground and the block hit me");
         } else if (nHitType == 5) {
             sprDino.bGoThrough = true;
-            nAni = 3;
+            nAni = 6;
         }
     }
 

@@ -166,7 +166,11 @@ public class SprDino extends Sprite {
                 }
 //                System.out.println(nHitType[x]);
 //                System.out.println(sprHitPoint.vPos.x + " " + sprHitPoint.vPos.y);
-            } else {
+            }
+//            if(sprHitPoint.vPos.x <= sprPlatform.vPos.x && sprHitPoint.vPos.x+sprHitPoint.getWidth() >= sprPlatform.vPos.x || sprHitPoint.vPos.x+sprHitPoint.getWidth()) >= sprPlatform.vPos.x && sprHitPoint.vPos.x <= sprPlatform.vPos.x+sprPlatform.getWidth()){
+//                nHitType[x] = 6;
+//            }
+            else {
                 nHitType[x] = 0;
             }
         }
