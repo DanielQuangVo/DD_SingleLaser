@@ -20,7 +20,7 @@ public class SprDino extends Sprite {
 
     SprDino(Texture _txDino, Texture[] _txHitPoint) {
         txHitPoint = _txHitPoint;
-        txDino = _txDino;        
+        txDino = _txDino;
         sprDino = new Sprite(txDino);
         vPos = new Vector2(0, 0);
         vDir = new Vector2(0, 0);
@@ -114,7 +114,8 @@ public class SprDino extends Sprite {
                 return 2;
             }
         } else if (nGeneralHitType == 3) {
-            if (nHitType[4] == 3 && nHitType[0] == 0 && nHitType[1] == 0 && nHitType[2] == 0 && nHitType[3] == 0) {
+            if (nHitType[4] == 3 && nHitType[0] != 6 && nHitType[1] != 6) {
+                //&& nHitType[2] == 0 && nHitType[3] == 0) {
                 if (nHitType[5] == 0 || nHitType[5] == 1 || nHitType[5] == 3) {
                     System.out.println("decapitation");
                     return 5;
@@ -132,7 +133,6 @@ public class SprDino extends Sprite {
         for (int x = 0; iter.hasNext(); x++) {
             SprHitPoint sprHitPoint = iter.next();
             if (sprHitPoint.getSprite().getBoundingRectangle().overlaps(sprPlatform.getSprite().getBoundingRectangle())) {
-
                 if (sprHitPoint.vPrevPos.y >= (sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight())) {
                     nHitType[x] = 2;
                 } else if (sprHitPoint.vPos.y == sprPlatform.vPrevPos.y + sprPlatform.getSprite().getHeight() - 1) {
@@ -164,15 +164,16 @@ public class SprDino extends Sprite {
                 if (x == 5) {
                     System.out.println("forehead");
                 }
-//                System.out.println(nHitType[x]);
+
 //                System.out.println(sprHitPoint.vPos.x + " " + sprHitPoint.vPos.y);
-            }
-//            if(sprHitPoint.vPos.x <= sprPlatform.vPos.x && sprHitPoint.vPos.x+sprHitPoint.getWidth() >= sprPlatform.vPos.x || sprHitPoint.vPos.x+sprHitPoint.getWidth()) >= sprPlatform.vPos.x && sprHitPoint.vPos.x <= sprPlatform.vPos.x+sprPlatform.getWidth()){
-//                nHitType[x] = 6;
-//            }
-            else {
+            } else if (sprHitPoint.vPos.x <= sprPlatform.vPos.x && sprHitPoint.vPos.x + sprHitPoint.getSprite().getWidth() >= sprPlatform.vPos.x || sprHitPoint.vPos.x >= sprPlatform.vPos.x && sprHitPoint.vPos.x <= sprPlatform.vPos.x + sprPlatform.getSprite().getWidth()) {
+                nHitType[x] = 6;
+                System.out.println("below");
+            } else {
                 nHitType[x] = 0;
             }
+            System.out.println(x+" "+sprPlatform.vPos.x + " " + sprHitPoint.vPos.x);
+            //System.out.println(sprPlatform.vPos.y + " " + sprHitPoint.vPos.y);
         }
     }
 
