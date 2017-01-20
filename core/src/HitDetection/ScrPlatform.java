@@ -9,6 +9,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import java.util.Iterator;
 
@@ -16,10 +17,12 @@ public class ScrPlatform implements Screen, InputProcessor {
 
     Game game;
     SpriteBatch batch;
-    Texture txDeadDino, txDino, txPlat, txSheet, txDinFor1, txDinoFor2, txBack1, txBack2, txJumpRight, txJumpLeft, txDead;
+    Texture txDeadDino, txDino, txPlat, txSheet, txDinFor1, txDinoFor2, txBack1, txBack2, txJumpRight, txJumpLeft, txDead, txLaser;
     Texture[] txHitPoint;
     SprDino sprDino;
     SprPlatform sprPlatform;
+    SprLaser sprLaser;
+    private Array<SprLaser> arsprLaser;
     private Array<SprPlatform> arsprPlatform;
     int nHitType, HitPlatform, nAni;
 
@@ -33,6 +36,7 @@ public class ScrPlatform implements Screen, InputProcessor {
         nAni = 0;
         game = _game;
         batch = new SpriteBatch();
+        txLaser = new Texture("laserscreen.jpg");
         txDino = new Texture("Forward.png");
         txDeadDino = new Texture("dead.png");
         txPlat = new Texture("Platform.png");
@@ -48,6 +52,7 @@ public class ScrPlatform implements Screen, InputProcessor {
         sprDino = new SprDino(txDino, txHitPoint);
         sprPlatform = new SprPlatform(txPlat);
         arsprPlatform = new Array<SprPlatform>();
+        arsprLaser = new Array<SprLaser>();
         arsprPlatform.add(sprPlatform);
     }
 
@@ -60,11 +65,21 @@ public class ScrPlatform implements Screen, InputProcessor {
     public void render(float f) {
         Gdx.gl.glClearColor(1, 0, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            sprLaser = new SprLaser(txLaser, sprDino.vPos, (float) Gdx.input.getX(), (float) Gdx.input.getY());
+            arsprLaser.add(sprLaser);
+        }
+        for (SprLaser sprLaser : arsprLaser) {
+            sprLaser.update(sprDino.vPos, (float) Gdx.input.getX(), (float) Gdx.input.getY());
+        }
         for (SprPlatform sprPlatform : arsprPlatform) {
             sprPlatform.update();
         }
         sprDino.PositionSet();
-        HitDetection();
+        if (isBasicHit()) {
+            HitDetection();
+        }
+
         sprDino.gravity();
         if (nAni == 0) {
             sprDino.Animate(txDinFor1);
@@ -86,13 +101,16 @@ public class ScrPlatform implements Screen, InputProcessor {
         for (SprPlatform sprPlatform : arsprPlatform) {
             batch.draw(sprPlatform.getSprite(), sprPlatform.getX(), sprPlatform.getY());
         }
+        for (SprLaser sprLaser : arsprLaser) {
+            //setRotation(sprLaser.fAngle * MathUtils.radiansToDegrees);
+            batch.draw(sprLaser.getSprite().getTexture(), (float) sprLaser.vStart.x, (float) sprLaser.vStart.y, 0, 0, sprLaser.getSprite().getWidth(), sprLaser.getSprite().getHeight(), 1f, 1f, sprLaser.fAngle, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
+        }
         batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
         for (SprHitPoint _sprHitPoint : sprDino.arsprHitPoint) {
             batch.draw(_sprHitPoint.getSprite(), _sprHitPoint.getX(), _sprHitPoint.getY());
         }
         SpawnPlatform();
         batch.end();
-
     }
 
     void SpawnPlatform() {
@@ -145,6 +163,17 @@ public class ScrPlatform implements Screen, InputProcessor {
             sprDino.bGoThrough = true;
             nAni = 6;
         }
+    }
+
+    boolean isBasicHit() {
+        Iterator<SprPlatform> iter = arsprPlatform.iterator();
+        while (iter.hasNext()) {
+            SprPlatform sprPlatform = iter.next();
+            if (sprDino.getSprite().getBoundingRectangle().overlaps(sprPlatform.getSprite().getBoundingRectangle())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int nHitPlatform() {
