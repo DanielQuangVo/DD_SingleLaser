@@ -102,7 +102,6 @@ public class ScrPlatform implements Screen, InputProcessor {
             batch.draw(sprPlatform.getSprite(), sprPlatform.getX(), sprPlatform.getY());
         }
         for (SprLaser sprLaser : arsprLaser) {
-            //setRotation(sprLaser.fAngle * MathUtils.radiansToDegrees);
             batch.draw(sprLaser.getSprite().getTexture(), (float) sprLaser.vStart.x, (float) sprLaser.vStart.y, 0, 0, sprLaser.getSprite().getWidth(), sprLaser.getSprite().getHeight(), 1f, 1f, sprLaser.fAngle, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, false);
         }
         batch.draw(sprDino.getSprite(), sprDino.getX(), sprDino.getY());
